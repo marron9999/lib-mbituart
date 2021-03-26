@@ -55,6 +55,7 @@ export function reset() {
     request.MagneticForce = 0
     request.Acceleration = 0
     request.Rotation = 0
+    request.Microphone = 0
 }
 
 function R(str : string) : boolean{
