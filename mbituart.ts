@@ -39,8 +39,8 @@ export function setupAudio() {
 //% weight=95
 function start(sleep = 50) {
     request.sleep = sleep
-    mbitlink.reseter(reset)
-    mbitlink.reciver(parse)
+    lib_mbitlink.reseter(reset)
+    lib_mbitlink.reciver(parse)
     basic.forever(function () {
         inspect()
         if(request.sleep > 0)
@@ -266,9 +266,9 @@ function inspect() {
             value.MagneticForce.Y = y
             value.MagneticForce.Z = z
             bluetooth.uartWriteString("F-"
-                + mbitlink.int16_hex(value.MagneticForce.X)
-                + mbitlink.int16_hex(value.MagneticForce.Y)
-                + mbitlink.int16_hex(value.MagneticForce.Z))
+                + lib_mbitlink.int16_hex(value.MagneticForce.X)
+                + lib_mbitlink.int16_hex(value.MagneticForce.Y)
+                + lib_mbitlink.int16_hex(value.MagneticForce.Z))
         }
     }
     if (request.Acceleration != 0) {
@@ -287,9 +287,9 @@ function inspect() {
             value.Acceleration.Y = y
             value.Acceleration.Z = z
             bluetooth.uartWriteString("G-"
-                + mbitlink.int16_hex(value.Acceleration.X)
-                + mbitlink.int16_hex(value.Acceleration.Y)
-                + mbitlink.int16_hex(value.Acceleration.Z))
+                + lib_mbitlink.int16_hex(value.Acceleration.X)
+                + lib_mbitlink.int16_hex(value.Acceleration.Y)
+                + lib_mbitlink.int16_hex(value.Acceleration.Z))
         }
     }
     if (request.Rotation != 0) {
@@ -303,8 +303,8 @@ function inspect() {
             value.Rotation.R = r
             value.Rotation.P = p
             bluetooth.uartWriteString("R-"
-                + mbitlink.int16_hex(value.Rotation.R)
-                + mbitlink.int16_hex(value.Rotation.P))
+                + lib_mbitlink.int16_hex(value.Rotation.R)
+                + lib_mbitlink.int16_hex(value.Rotation.P))
         }
     }
 }
