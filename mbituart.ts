@@ -5,6 +5,7 @@ export let value = {
     Button : { A: 0, B: 0, L:0, P0:0, P1:0, P2:0 },
     LightLevel : 0,
     Temperature : 0,
+    Microphone : 0,
     MagneticForce : { X: 0, Y: 0, Z: 0 },
     Acceleration : { X: 0, Y: 0, Z: 0 },
     Rotation : { R: 0, P: 0 },
@@ -13,6 +14,7 @@ export let value = {
 
 export let request = {
     Microbit : 0,
+    Microphone : 0,
     MagneticForce : 0,
     Acceleration : 0,
     Rotation : 0,
@@ -76,6 +78,10 @@ function R(str : string) : boolean{
     }
     if (c == "R") {
         request.Rotation = parseInt(str)
+        return true
+    }
+    if (c == "P") {
+        request.Microphone = parseInt(str)
         return true
     }
     return false
@@ -305,6 +311,16 @@ function inspect() {
             bluetooth.uartWriteString("R-"
                 + lib_mbitlink.int16_hex(value.Rotation.R)
                 + lib_mbitlink.int16_hex(value.Rotation.P))
+        }
+    }
+    if (request.Microphone != 0) {
+        let v = input.soundLevel()
+        if (request.Microphone != 1) {
+            v = Math.floor(v / request.Microphone) * request.Microphone
+        }
+        if (value.Microphone != v) {
+            value.Microphone = v
+            bluetooth.uartWriteString("P-" + value.Microphone)
         }
     }
 }
