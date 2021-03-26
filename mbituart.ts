@@ -37,7 +37,7 @@ export function setupAudio() {
 //% blockId=mbituart_start block="Start mbituart |%sleep "
 //% sleep.defl=50 sleep.min=0 sleep.max=1000
 //% weight=95
-function start(sleep = 50) {
+export function start(sleep = 50) {
     request.sleep = sleep
     lib_mbitlink.reseter(reset)
     lib_mbitlink.reciver(parse)
