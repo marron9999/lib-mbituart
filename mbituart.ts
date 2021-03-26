@@ -1,5 +1,5 @@
 //% weight=10 color=#008B00 icon="\uf2db" block="mbituart"
-namespace lib-mbituart {
+namespace lib_mbituart {
 
 export let value = {
     Button : { A: 0, B: 0, L:0, P0:0, P1:0, P2:0 },
