@@ -21,6 +21,8 @@ export let request = {
     sleep: 50
 }
 
+//% blockId=mbituart_setup_audio block="Setup audio for micro:bit"
+//% weight=95
 export function setupAudio() {
     pins.digitalWritePin(DigitalPin.P0, 0)
     //pins.analogSetPitchPin(AnalogPin.P0)
@@ -36,11 +38,12 @@ export function setupAudio() {
 /**
  * Start micro:bit sensor service
  */
-//% blockId=mbituart_start block="Start mbituart |%sleep "
+//% blockId=mbituart_start block="Start mbituart |%sleep"
 //% sleep.defl=50 sleep.min=0 sleep.max=1000
 //% weight=95
 export function start(sleep : number = 50) {
     request.sleep = sleep
+	reset()
     lib_mbitlink.reseter(reset)
     lib_mbitlink.reciver(parse)
     basic.forever(function () {
