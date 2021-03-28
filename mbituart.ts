@@ -40,10 +40,9 @@ export function setupAudio() {
 /**
  * Start micro:bit sensor service
  */
-//% blockId=mbituart_start block="Start mbituart |%sleep"
-//% sleep.defl=50 sleep.min=0 sleep.max=1000
+//% blockId=mbituart_start block="Start mbituart"
 //% weight=95
-export function start(sleep : number = 50) {
+export function start() {
     request.sleep = sleep
 	reset()
     lib_mbitlink.reseter(reset)
