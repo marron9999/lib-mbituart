@@ -14,6 +14,7 @@ export let value = {
 
 export let request = {
     Microbit : 0,
+    Mode : { P0:0, P1:0, P2:0 },
     Microphone : 0,
     MagneticForce : 0,
     Acceleration : 0,
@@ -88,6 +89,18 @@ function R(str : string) : boolean{
         request.Microphone = parseInt(str)
         return true
     }
+    if (c == "0") {
+        request.Mode.P0 = parseInt(str)
+        return true
+    }
+    if (c == "1") {
+        request.Mode.P1 = parseInt(str)
+        return true
+    }
+    if (c == "2") {
+        request.Mode.P2 = parseInt(str)
+        return true
+    }
     return false
 }
 
@@ -156,6 +169,44 @@ function T(str : string) {
     music.playTone(v, w)
 }
 
+function P(str : string) {
+    let c = str.charAt(0)
+    str = str.substr(1)
+    if (c == "0") {
+	    if (request.Mode.P0 != 0) {
+	        let v = parseInt(str);
+		    if (request.Mode.P0 == 1) {
+		        pins.digitalWritePin(DigitalPin.P0, v);
+			} else {
+		        pins.analogWritePin(AnalogPin.P0, v);
+			}
+		}
+        return
+    }
+    if (c == "1") {
+	    if (request.Mode.P1 != 0) {
+	        let v = parseInt(str);
+		    if (request.Mode.P1 == 1) {
+		        pins.digitalWritePin(DigitalPin.P1, v);
+			} else {
+		        pins.analogWritePin(AnalogPin.P1, v);
+			}
+		}
+        return
+    }
+    if (c == "2") {
+	    if (request.Mode.P2 != 0) {
+	        let v = parseInt(str);
+		    if (request.Mode.P2 == 1) {
+		        pins.digitalWritePin(DigitalPin.P2, v);
+			} else {
+		        pins.analogWritePin(AnalogPin.P2, v);
+			}
+		}
+        return
+    }
+}
+
 function parse(str : string) : boolean {
     let c = str.charAt(0)
     str = str.substr(1)
@@ -176,6 +227,10 @@ function parse(str : string) : boolean {
         input.setAccelerometerRange(v)
         return true
     }
+    if (c == "P") {
+        P(str)
+        return true
+    }
     if (c == "R") {
         return R(str)
     }
@@ -183,8 +238,8 @@ function parse(str : string) : boolean {
 }
 
 function inspect() {
+	let m = ""
     if ((request.Microbit & 1) != 0) {
-        let m = ""
         let v = 0
         if (input.buttonIsPressed(Button.A)) v = 1
         if (value.Button.A != v) {
@@ -203,31 +258,50 @@ function inspect() {
             value.Button.L = v
             m += ",BL" + value.Button.L
         }
-        if (m.length > 0) {
-            bluetooth.uartWriteString(m.substr(1))
-        }
     }
-    if ((request.Microbit & 8) != 0) {
-        let m = ""
-        let v = pins.digitalReadPin(DigitalPin.P0);
+	if (m.length > 0) {
+		bluetooth.uartWriteString(m.substr(1))
+	}
+    m = ""
+    if (request.Mode.P0 != 0) {
+        let v = 0;
+	    if (request.Mode.P0 == 1) {
+	        v = pins.digitalReadPin(DigitalPin.P0);
+		} else {
+	        v = pins.analogReadPin(AnalogPin.P0);
+		}
         if (value.Button.P0 != v) {
             value.Button.P0 = v
             m += ",B0" + value.Button.P0
         }
-        v = pins.digitalReadPin(DigitalPin.P1);
+	}
+    if (request.Mode.P1 != 0) {
+        let v = 0;
+	    if (request.Mode.P1 == 1) {
+	        v = pins.digitalReadPin(DigitalPin.P1);
+		} else {
+	        v = pins.analogReadPin(AnalogPin.P1);
+		}
         if (value.Button.P1 != v) {
             value.Button.P1 = v
             m += ",B1" + value.Button.P1
         }
-        v = pins.digitalReadPin(DigitalPin.P2);
+	}
+    if (request.Mode.P2 != 0) {
+        let v = 0;
+	    if (request.Mode.P2 == 1) {
+	        v = pins.digitalReadPin(DigitalPin.P2);
+		} else {
+	        v = pins.analogReadPin(AnalogPin.P2);
+		}
         if (value.Button.P2 != v) {
             value.Button.P2 = v
             m += ",B2" + value.Button.P2
         }
-        if (m.length > 0) {
-            bluetooth.uartWriteString(m.substr(1))
-        }
     }
+	if (m.length > 0) {
+		bluetooth.uartWriteString(m.substr(1))
+	}
     if ((request.Microbit & 2) != 0) {
         let v = input.temperature()
         if (value.Temperature != v) {
