@@ -19,8 +19,7 @@ export let request = {
     Microphone : 0,
     MagneticForce : 0,
     Acceleration : 0,
-    Rotation : 0,
-    sleep: 50
+    Rotation : 0
 }
 
 //% blockId=mbituart_setup_audio block="Setup audio for micro:bit"
@@ -43,8 +42,7 @@ export function setupAudio() {
 //% blockId=mbituart_start block="Start mbituart"
 //% weight=95
 export function start() {
-    request.sleep = sleep
-	reset()
+    reset()
     lib_mbitlink.reseter(reset)
     lib_mbitlink.reciver(parse)
     lib_mbitlink.inspecter(inspect)
