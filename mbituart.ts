@@ -2,7 +2,8 @@
 namespace lib_mbituart {
 
 export let value = {
-    Button : { A: 0, B: 0, L:0, P0:0, P1:0, P2:0 },
+    Button : { A: 0, B: 0, L:0 },
+    Pin : [0, 0, 0 ],
     LightLevel : 0,
     Temperature : 0,
     Microphone : 0,
@@ -14,7 +15,7 @@ export let value = {
 
 export let request = {
     Microbit : 0,
-    Mode : { P0:0, P1:0, P2:0 },
+    Pin : [ 0, 0, 0 ],
     Microphone : 0,
     MagneticForce : 0,
     Acceleration : 0,
@@ -90,15 +91,15 @@ function R(str : string) : boolean{
         return true
     }
     if (c == "0") {
-        request.Mode.P0 = parseInt(str)
+        request.Pin[0] = parseInt(str)
         return true
     }
     if (c == "1") {
-        request.Mode.P1 = parseInt(str)
+        request.Pin[0] = parseInt(str)
         return true
     }
     if (c == "2") {
-        request.Mode.P2 = parseInt(str)
+        request.Pin[0] = parseInt(str)
         return true
     }
     return false
@@ -171,36 +172,17 @@ function T(str : string) {
 
 function P(str : string) {
     let c = str.charAt(0)
-    str = str.substr(1)
-    if (c == "0") {
-	    if (request.Mode.P0 != 0) {
+	let p = parseInt(c)
+	if(0 <= p && p <= 2) {
+	    str = str.substr(1)
+	    if (request.Pin[p] != 0) {
 	        let v = parseInt(str);
-		    if (request.Mode.P0 == 1) {
-		        pins.digitalWritePin(DigitalPin.P0, v);
+		    if (request.Pin[p] == 1) {
+				let pin = [DigitalPin.P0, DigitalPin.P1, DigitalPin.P2]
+		        pins.digitalWritePin(pin[p], v);
 			} else {
-		        pins.analogWritePin(AnalogPin.P0, v);
-			}
-		}
-        return
-    }
-    if (c == "1") {
-	    if (request.Mode.P1 != 0) {
-	        let v = parseInt(str);
-		    if (request.Mode.P1 == 1) {
-		        pins.digitalWritePin(DigitalPin.P1, v);
-			} else {
-		        pins.analogWritePin(AnalogPin.P1, v);
-			}
-		}
-        return
-    }
-    if (c == "2") {
-	    if (request.Mode.P2 != 0) {
-	        let v = parseInt(str);
-		    if (request.Mode.P2 == 1) {
-		        pins.digitalWritePin(DigitalPin.P2, v);
-			} else {
-		        pins.analogWritePin(AnalogPin.P2, v);
+				let pin = [AnalogPin.P0, AnalogPin.P1, AnalogPin.P2]
+		        pins.analogWritePin(pin[p], v);
 			}
 		}
         return
@@ -263,42 +245,22 @@ function inspect() {
 		bluetooth.uartWriteString(m.substr(1))
 	}
     m = ""
-    if (request.Mode.P0 != 0) {
-        let v = 0;
-	    if (request.Mode.P0 == 1) {
-	        v = pins.digitalReadPin(DigitalPin.P0);
-		} else {
-	        v = pins.analogReadPin(AnalogPin.P0);
+	for(let p=0; p<=2; p++) {
+	    if (request.Pin[0] != 0) {
+	        let v = 0;
+		    if (request.Pin[p] == 1) {
+				let pin = [DigitalPin.P0, DigitalPin.P1, DigitalPin.P2]
+		        v = pins.digitalReadPin(pin[p]);
+			} else {
+				let pin = [AnalogPin.P0, AnalogPin.P1, AnalogPin.P2]
+		        v = pins.analogReadPin(pin[p]);
+			}
+	        if (value.Pin[p] != v) {
+	            value.Pin[p] = v
+	            m += ",B" + p + value.Pin[p]
+	        }
 		}
-        if (value.Button.P0 != v) {
-            value.Button.P0 = v
-            m += ",B0" + value.Button.P0
-        }
 	}
-    if (request.Mode.P1 != 0) {
-        let v = 0;
-	    if (request.Mode.P1 == 1) {
-	        v = pins.digitalReadPin(DigitalPin.P1);
-		} else {
-	        v = pins.analogReadPin(AnalogPin.P1);
-		}
-        if (value.Button.P1 != v) {
-            value.Button.P1 = v
-            m += ",B1" + value.Button.P1
-        }
-	}
-    if (request.Mode.P2 != 0) {
-        let v = 0;
-	    if (request.Mode.P2 == 1) {
-	        v = pins.digitalReadPin(DigitalPin.P2);
-		} else {
-	        v = pins.analogReadPin(AnalogPin.P2);
-		}
-        if (value.Button.P2 != v) {
-            value.Button.P2 = v
-            m += ",B2" + value.Button.P2
-        }
-    }
 	if (m.length > 0) {
 		bluetooth.uartWriteString(m.substr(1))
 	}
